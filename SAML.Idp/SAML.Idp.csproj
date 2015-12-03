@@ -214,6 +214,9 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="App_Data\Kentor.AuthServices.StubIdp.pfx" />
+    <None Include="Properties\PublishProfiles\MSALoginWeb - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\MSALoginWeb - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\pgambersaml - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
