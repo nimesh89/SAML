@@ -8,19 +8,14 @@
     {
         public ActionResult Index(DiscoveryServiceModel model)
         {
-            if(model.isPassive || this.Request.HttpMethod == "POST")
-            {
-                string delimiter = model.@return.Contains("?") ? "&" : "?";
+            string delimiter = model.@return.Contains("?") ? "&" : "?";
 
-                return this.Redirect(string.Format(
-                    "{0}{1}{2}={3}",
-                    model.@return,
-                    delimiter,
-                    model.returnIDParam,
-                    model.SelectedIdp));
-            }
-
-            return this.View(model);
+            return this.Redirect(string.Format(
+                "{0}{1}{2}={3}",
+                model.@return,
+                delimiter,
+                model.returnIDParam,
+                model.SelectedIdp));
         }
     }
 }

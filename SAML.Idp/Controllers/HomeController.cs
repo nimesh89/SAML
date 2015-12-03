@@ -1,30 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Security.Claims;
 using System.Web.Mvc;
+using Kentor.AuthServices.HttpModule;
+using Kentor.AuthServices.Mvc;
+using Kentor.AuthServices.Saml2P;
+using Kentor.AuthServices.WebSso;
+using SAML.Idp.Models;
 
 namespace SAML.Idp.Controllers
 {
-    public class HomeController : Controller
+    [Authorize]
+    public class HomeController : BaseController
     {
-        public ActionResult Index()
+        public ActionResult Index(Guid? idpId)
         {
-            return View();
-        }
+            var requestData = Request.ToHttpRequestData();
+            if (requestData.QueryString["SAMLRequest"].Any())
+            {
+                var decodedXmlData = Saml2Binding.Get(Saml2BindingType.HttpRedirect)
+                    .Unbind(requestData);
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+                var request = Saml2AuthenticationRequest.Read(decodedXmlData);
 
-            return View();
-        }
+                var model = new AssertionModel();
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+                model.InResponseTo = request.Id;
+                model.AssertionConsumerServiceUrl = request.AssertionConsumerServiceUrl.ToString();
+                model.AuthnRequestXml = decodedXmlData;
+                model.NameId = ((ClaimsIdentity) User.Identity).Name;
 
-            return View();
+                var response = model.ToSaml2Response();
+
+                var commandResult = Saml2Binding.Get(Saml2BindingType.HttpPost)
+                    .Bind(response);
+
+                return commandResult.ToActionResult();
+            }
+
+            throw new InvalidOperationException();
         }
     }
 }
