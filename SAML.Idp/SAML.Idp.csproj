@@ -189,9 +189,15 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
+    <Compile Include="DbConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512170310292_initial.cs" />
+    <Compile Include="Migrations\201512170310292_initial.Designer.cs">
+      <DependentUpon>201512170310292_initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AssertionModel.cs" />
     <Compile Include="Models\AttributeStatementModel.cs" />
@@ -201,6 +207,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MetadataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionManager.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="UrlResolver.cs" />
   </ItemGroup>
@@ -229,7 +236,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -270,6 +279,7 @@
   <ItemGroup>
     <Folder Include="Views\Federation\" />
     <Folder Include="Views\Metadata\" />
+    <Folder Include="Views\Signout\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -281,6 +291,11 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201512170310292_initial.resx">
+      <DependentUpon>201512170310292_initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

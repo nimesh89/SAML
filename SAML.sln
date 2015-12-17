@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24627.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAML.Idp", "SAML.Idp\SAML.Idp.csproj", "{7C6142F3-3CB5-4F87-9227-D3D4420F3687}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAML.ClientA", "SAML.ClientA\SAML.ClientA.csproj", "{3B07EDD8-F1B9-41CC-A064-3CE4CA8AD897}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAML.ClientB", "SAML.ClientB\SAML.ClientB.csproj", "{7042443D-86E0-4237-B9D7-9A5C067F1830}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3B07EDD8-F1B9-41CC-A064-3CE4CA8AD897}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B07EDD8-F1B9-41CC-A064-3CE4CA8AD897}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B07EDD8-F1B9-41CC-A064-3CE4CA8AD897}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7042443D-86E0-4237-B9D7-9A5C067F1830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7042443D-86E0-4237-B9D7-9A5C067F1830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7042443D-86E0-4237-B9D7-9A5C067F1830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7042443D-86E0-4237-B9D7-9A5C067F1830}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

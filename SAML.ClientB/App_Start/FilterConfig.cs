@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace SAML.ClientA
+namespace SAML.ClientB
 {
     public class FilterConfig
     {

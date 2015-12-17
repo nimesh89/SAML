@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -22,7 +26,7 @@ namespace SAML.Idp.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +38,9 @@ namespace SAML.Idp.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -120,7 +124,7 @@ namespace SAML.Idp.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -155,8 +159,8 @@ namespace SAML.Idp.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -389,8 +393,29 @@ namespace SAML.Idp.Controllers
         // POST: /Account/LogOff
         public ActionResult LogOff()
         {
+            var name = ((ClaimsIdentity)User.Identity).Name;
+            var extendedName = HttpUtility.UrlEncode(name + ";" + UrlResolver.MetadataUrl.ToString());
+
+            RSAPKCS1SignatureFormatter RSAFormatter = new RSAPKCS1SignatureFormatter(CertificateHelper.SigningCertificate.PrivateKey);
+            RSAFormatter.SetHashAlgorithm("SHA1");
+            SHA1Managed SHhash = new SHA1Managed();
+            byte[] SignedHashValue = RSAFormatter.CreateSignature(SHhash.ComputeHash(new UnicodeEncoding().GetBytes(extendedName)));
+            string signature = System.Convert.ToBase64String(SignedHashValue);
+
+            var clientUrl = Request.UrlReferrer.AbsoluteUri;
+
+            var logOutClients =
+                SessionManager.Instance.GetSessions(name).Where(session => session.LogoutUrl != clientUrl);
+
+            using (var agent = new WebClient())
+                foreach (var logOutClient in logOutClients)
+                {
+                    agent.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    agent.UploadString(logOutClient.LogoutUrl, "SAMLLogoutUser=" + extendedName + "&hash=" + HttpUtility.UrlEncode(signature));
+                }
+
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return Redirect(Request.UrlReferrer.AbsoluteUri);
+            return Redirect(clientUrl);
         }
 
         //

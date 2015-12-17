@@ -30,7 +30,19 @@ namespace SAML.Idp.Controllers
                 model.AuthnRequestXml = decodedXmlData;
                 model.NameId = ((ClaimsIdentity) User.Identity).Name;
 
+                var manager = SessionManager.Instance;
+                
+
                 var response = model.ToSaml2Response();
+
+                manager.AddSession(model.NameId, new Session()
+                {
+                    Id = Guid.Parse(request.Id.Substring(2)),
+                    Ip = Request.UserHostAddress,
+                    UserAgent = Request.UserAgent,
+                    LogoutUrl = request.Issuer.Id,
+                    Issuer = response.Issuer.Id
+                });
 
                 var commandResult = Saml2Binding.Get(Saml2BindingType.HttpPost)
                     .Bind(response);
